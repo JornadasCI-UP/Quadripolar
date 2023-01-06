@@ -10,6 +10,7 @@ public class ScrollView extends VBox{
         scroll = new ListView<>();
         this.getChildren().add(scroll);
         this.getChildren().forEach(child -> VBox.setVgrow(child, Priority.ALWAYS));
+        scroll.getItems().add(new GuestCard("!", "?"));
     }
 
     public void setElementList(GuestCard gc){
