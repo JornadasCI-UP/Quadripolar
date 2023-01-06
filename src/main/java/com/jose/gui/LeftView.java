@@ -1,5 +1,8 @@
 package com.jose.gui;
 
-public class LeftView {
+import javafx.scene.layout.*;
+
+public class LeftView extends VBox {
     
+    Pane connection, attendance;
 }
