@@ -13,7 +13,7 @@ import javafx.scene.text.Text;
 
 public class GuestCard extends FlowPane {
     
-    Text nome, modalidade;
+    public Text nome, modalidade;
     Button registar;
 
     public GuestCard(String nome, String modalidade){
