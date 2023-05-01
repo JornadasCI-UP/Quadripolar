@@ -1,1 +1,5 @@
 https://www.tutorialspoint.com/javafx/javafx_event_handling.htm
+# threading
+https://www.youtube.com/watch?v=pdRX6CLP0tM
+https://docs.oracle.com/javase/8/javafx/api/javafx/concurrent/Service.html
+https://docs.oracle.com/javafx/2/api/javafx/concurrent/Task.html
