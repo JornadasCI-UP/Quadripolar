@@ -1,7 +1,12 @@
 package com.jose.gui;
 
-import com.jose.database.SQLConnection;
+import java.sql.ResultSet;
 
+import com.jose.database.SQLConnection;
+import com.jose.threading.DBTask;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
@@ -14,8 +19,6 @@ public class mainview extends BorderPane {
     LeftView left;
     TopMenu menu;
 
-    SQLConnection connection;
-
     public mainview(){
         search = new SearchPane();
         scroll = new ScrollView();
@@ -27,6 +30,7 @@ public class mainview extends BorderPane {
         this.setLeft(left);
         this.setTop(search);
         this.setCenter(scroll);
+
     }
 
     EventHandler<MouseEvent> scrollEventHandler = new EventHandler<>() {
@@ -36,10 +40,13 @@ public class mainview extends BorderPane {
             
             GuestCard gc = scroll.getSelectedCard();
             left.setName(gc.nome.getText());
-            System.out.println(gc.nome.toString());
         }
         
     };
+
+    SQLConnection connection;
+    DBTask task;
+    ResultSet rs;
 
 
     EventHandler<ActionEvent> buttoEventHandler = new EventHandler<ActionEvent>() {
@@ -53,14 +60,44 @@ public class mainview extends BorderPane {
                 username = left.getSQLUser();
                 password = left.getSQLPassword();
 
-                connection = new SQLConnection("127.0.0.1:53061", username, password );
+                connection = new SQLConnection("jdbc:mysql://localhost:53061/jornadas_ci", username, password );
+                task = new DBTask(connection);
+
+                task.valueProperty().addListener(new ChangeListener<ResultSet>() {
+
+                    @Override
+                    public void changed(ObservableValue<? extends ResultSet> observableValue, ResultSet oldSet, ResultSet newSet) {
+                        rs = newSet;
+                        GuestCard gc;
+
+                        try {
+                            
+                            while(rs.next() != false){
+
+                                String name = rs.getString("Nome");
+
+                                gc = new GuestCard(name, "password");
+                                scroll.setElementList(gc);
+
+                            }
+
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                        }
+                    }
+                    
+                    
+                });
+
+                Thread taskThread = new Thread(task);
+                taskThread.setDaemon(true);
+                taskThread.run();
+                
             }
 
             
         }
         
     };
-    
-
 
 }
